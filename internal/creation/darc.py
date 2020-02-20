@@ -68,7 +68,7 @@ class DARC:
         for e in entries:
             self.entries_data += struct.pack("<3I", e.name_off, e.data_off, e.size)
         filelen = header_size + len(self.entries_data) + len(self.names) + len(self.filedata)
-        self.header += struct.pack("4I", filelen, table_start, len(self.filedata), header_size + len(self.entries_data) + len(self.names))
+        self.header += struct.pack("<4I", filelen, table_start, len(self.entries_data) + len(self.names), header_size + len(self.entries_data) + len(self.names))
 
     def write_to_file(self, out):
         out.write(self.header)

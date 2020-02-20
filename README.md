@@ -30,8 +30,8 @@ https://github.com/shibbo/flyte
 - For unpacking darc files  
 https://www.3dbrew.org/wiki/DARC  
 https://github.com/yellows8/darctool  
-https://github.com/magical/nlzss for decompression of darc files (works) and compression when rebuilding (slow, non working)  
-https://github.com/DorkmasterFlek/python-nlzss for compression (non working)  
+https://github.com/magical/nlzss for decompression of darc files  
+https://github.com/DorkmasterFlek/python-nlzss for compression of darc files  
 
 ## License
 

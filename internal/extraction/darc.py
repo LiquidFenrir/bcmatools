@@ -70,3 +70,4 @@ class DARC(ReaderThingy):
         self.data.files = {}
         self.data.pathroot = ""
         self.analyze_part(2, len(self.data.tableentries))
+        print(self.index)
