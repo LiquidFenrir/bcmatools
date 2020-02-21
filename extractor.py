@@ -30,6 +30,10 @@ def do_arc(fn, outfolder):
         #     with open(os.path.join(outfolder, k), "rb") as f:
         #         extraction.BCLIM(f.read())
 
+def do_single_bclyt(filepath, savepos):
+    with open(filepath, "rb") as f:
+        extraction.BCLYT(f.read()).to_xml().getroottree().write(savepos, pretty_print=True, xml_declaration=True, encoding='utf-8')
+
 def do_bclyt(name, savepos):
     regions = ["EUR", "USA", "CHN", "TWN", "JPN", "KOR"]
     types = ["small", "large", "index", "BcmaInfo"]
@@ -138,6 +142,7 @@ if __name__ == "__main__":
     handlers = {
         "arc": do_arc,
         "bclyt": do_bclyt,
+        "single": do_single_bclyt,
     }
 
     if len(sys.argv) == 4:

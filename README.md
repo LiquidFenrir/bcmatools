@@ -20,6 +20,15 @@ To insert the newly created bcma into a cia:
 - run the command `makerom -f cfa -o "<output cfa file>" -target t -rsf "<path to manual.rsf>"`
 - and finally, when building your game/application cia, add `-content "<path to the cfa>:1:1"` at the end of the makerom command
 
+## Requirements
+
+For simply unpacking:  
+`pip install lxml`  
+To be able to repack a XML:  
+`pip install -e ./nzlss_src`  
+To use the editor:  
+`pip install PySide2`  
+
 ## Inspirations and data sources
 
 - For parsing the BCLYT files  
