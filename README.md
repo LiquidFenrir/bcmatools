@@ -16,8 +16,7 @@ python3 creator.py <xml file> <output bcma file>
 
 To insert the newly created bcma into a cia:
 - rename it to `Manual.bcma` and place it in a folder, alone
-- modify `manual.rsf` so that the RootPath value is the folder where you placed the `Manual.bcma`
-- run the command `makerom -f cfa -o "<output cfa file>" -target t -rsf "<path to manual.rsf>"`
+- run the command `makerom -f cfa -o "<output cfa file>" -target t -rsf "<path to manual.rsf>" -DMANUAL_ROMFS="<path to folder containing Manual.bcma>"`
 - and finally, when building your game/application cia, add `-content "<path to the cfa>:1:1"` at the end of the makerom command
 
 ## Requirements

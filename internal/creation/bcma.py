@@ -89,7 +89,7 @@ class BCMA:
         tree_structure = {}
         for image_name, image_data in self.common_images.items():
             tree_structure[f"{image_name}.bclim"] = image_data
-        self.internal_darcs.append(("Common_texture", DARC({"timg": tree_structure})))
+        self.internal_darcs.append(("Common_texture", DARC({"timg": tree_structure}, 0x100, 0x80)))
 
         print("Built Common_texture DARC")
 
@@ -97,10 +97,11 @@ class BCMA:
             tree_structure = {}
             for image_name, image_data in arcdata.items():
                 tree_structure[f"{image_name}.bclim"] = image_data
-            self.internal_darcs.append((imagarc, DARC({"timg": tree_structure})))
+            self.internal_darcs.append((imagarc, DARC({"timg": tree_structure}, 0x100, 0x80)))
 
         print("Built remaining texture DARCs")
 
+        self.languages.sort()
         for reglang in self.languages:
             bclytbytes = BytesIO()
 
@@ -116,7 +117,7 @@ class BCMA:
                 large_page.write_to_file(bclytbytes)
                 n = f"{name}.bclyt"
                 tree_structure[n] = bclytbytes.getvalue()
-            self.internal_darcs.append((f"{reglang}_large", DARC({"blyt": tree_structure})))
+            self.internal_darcs.append((f"{reglang}_large", DARC({"blyt": tree_structure}, file_padding_part=0x4)))
 
             tree_structure = {}
             for name, small_page in self.small_pages[reglang]:
@@ -124,7 +125,7 @@ class BCMA:
                 small_page.write_to_file(bclytbytes)
                 n = f"{name}.bclyt"
                 tree_structure[n] = bclytbytes.getvalue()
-            self.internal_darcs.append((f"{reglang}_small", DARC({"blyt": tree_structure})))
+            self.internal_darcs.append((f"{reglang}_small", DARC({"blyt": tree_structure}, file_padding_part=0x4)))
 
         print("Built DARCs")
 
@@ -134,5 +135,5 @@ class BCMA:
             darc.write_to_file(darc_bytes)
             print("Compressing", darc_name)
             tree_structure[f"{darc_name}.arc"] = compress(darc_bytes.getvalue())
-        final_darc = DARC(tree_structure)
+        final_darc = DARC(tree_structure, 0x20)
         final_darc.write_to_file(out)

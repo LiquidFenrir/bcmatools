@@ -3,4 +3,4 @@ BasicInfo:
   Logo                    : None
   
 RomFs:
-  RootPath                : assets/manual
+  RootPath                : $(MANUAL_ROMFS)

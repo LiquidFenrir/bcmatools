@@ -25,7 +25,7 @@ class TableEntry:
         self.size = size
 
 class DARC:
-    def __init__(self, file_tree):
+    def __init__(self, file_tree, names_padding_part=0x4, file_padding_part=0x10):
         folders, files = explore_tree(file_tree)
         assert(len(folders) <= 1) # only supports trees with 1 folder or none at all
         header_size = 0x1c
@@ -52,23 +52,30 @@ class DARC:
             entries.append(TableEntry(False, name_index, 0, len(data)))
             entries[-1].data = data
             name_index += len(encoded)
+
         # pad to 4 byte boundary
-        if len(self.names) & 3:
-            self.names += b"\x00" * (4 - (len(self.names) & 3))
+        names_len = table_start + table_entries_size + len(self.names)
+        names_padding_size_d = names_len & (names_padding_part-1)
+        names_padding_size_other = names_len & 3
+        if names_padding_size_d != 0:
+            names_padding_size_d = (names_padding_part - names_padding_size_d)
+            self.names += b"\x00" * names_padding_size_d
         data_start = table_start + table_entries_size + len(self.names)
+
         self.filedata = bytearray()
         for i in range(table_files_start_index, len(entries)):
             new_off = len(self.filedata) + data_start
             entries[i].data_off = new_off
             self.filedata += entries[i].data
-            diff = len(self.filedata) & 15
-            if diff != 0:
-                self.filedata += b"\x00" * (16 - diff)
+            diff = len(self.filedata) & (file_padding_part-1)
+            if diff != 0 and not len(entries) == (i+1):
+                self.filedata += b"\x00" * (file_padding_part - diff)
+
         self.entries_data = bytearray()
         for e in entries:
             self.entries_data += struct.pack("<3I", e.name_off, e.data_off, e.size)
         filelen = header_size + len(self.entries_data) + len(self.names) + len(self.filedata)
-        self.header += struct.pack("<4I", filelen, table_start, len(self.entries_data) + len(self.names), header_size + len(self.entries_data) + len(self.names))
+        self.header += struct.pack("<4I", filelen, table_start, len(self.entries_data) + len(self.names) - names_padding_size_d , data_start - names_padding_size_d + names_padding_size_other)
 
     def write_to_file(self, out):
         out.write(self.header)

@@ -14,5 +14,5 @@ if __name__ == "__main__":
     if len(sys.argv) == 3:
         do_creation(sys.argv[1], sys.argv[2])
     else:
-        print("Usage: {} <input path> <output path>".format(sys.argv[0]))
+        print("Usage: {} <input .xml path> <output .bcma path>".format(sys.argv[0]))
         sys.exit(0)
